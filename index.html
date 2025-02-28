@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Order Form</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Order Form</h2>
+      <form id="orderForm">
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="productId">Product ID:</label>
+        <input type="text" id="productId" name="productId" required />
+
+        <label for="productName">Product Name:</label>
+        <input type="text" id="productName" name="productName" required />
+
+        <label for="price">Price ($):</label>
+        <input type="number" id="price" name="price" min="0" required />
+
+        <label for="description">Description:</label>
+        <textarea
+          id="description"
+          name="description"
+          rows="3"
+          required
+        ></textarea>
+
+        <p class="total">Total Price: $<span id="total">0</span></p>
+
+        <button type="submit">Submit Order</button>
+      </form>
+    </div>
+
+    <script>
+      document
+        .getElementById("orderForm")
+        .addEventListener("input", function () {
+          let price = parseFloat(document.getElementById("price").value) || 0;
+          document.getElementById("total").innerText = price.toFixed(2);
+        });
+
+      document
+        .getElementById("orderForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const formData = {
+            email: document.getElementById("email").value,
+            productId: document.getElementById("productId").value,
+            productName: document.getElementById("productName").value,
+            price: document.getElementById("price").value,
+            description: document.getElementById("description").value,
+          };
+
+          const response = await fetch("http://localhost:8000/order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          });
+
+          const result = await response.text();
+          alert(result);
+        });
+    </script>
+  </body>
+</html>
